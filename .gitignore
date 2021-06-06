@@ -1,1 +1,5 @@
 /music_controller/music_controller/settings.py
+/music_controller/frontend/node_modules
+/music_controller/frontend/package-lock.json
+
+*.pyc
