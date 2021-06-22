@@ -49,7 +49,7 @@ export default class CreateRoomPage extends Component {
     };
     fetch('/api/create-room', requestOptions)
       .then((res) => res.json())
-      .then((data) => console.log(data))
+      .then((data) => this.props.history.push('/room/' + data.code));
   }
 
   render(){
