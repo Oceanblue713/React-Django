@@ -15,7 +15,7 @@ export default class RoomJoinPage extends Component {
 
   render(){
     return (
-      <Grid container spacing={1}>
+      <Grid container spacing={1} alignItems="center">
         <Grid item xs={12} alignItems="center">
           <Typography variant="h4" component="h4">
             Join a Room
@@ -47,6 +47,21 @@ export default class RoomJoinPage extends Component {
   }
 
   roomButtonPressed() {
-    console.log(this.state.roomCode)
+    const requestOptions = {
+      method: "POST",
+      headers: {"Content-Type": "application.json"},
+      body: JSON.stringify({
+        code: this.state.roomCode
+      })
+    };
+    fetch('/api/join-room', requestOptions).then((response) => {
+      if (response.ok) {
+        this.props.history.push(`/room/${this.state.roomCode}`)
+      } else {
+        this.setState({ error: "Room not found."})
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
   }
 }
