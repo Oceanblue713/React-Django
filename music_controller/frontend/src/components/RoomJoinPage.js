@@ -15,7 +15,7 @@ export default class RoomJoinPage extends Component {
 
   render(){
     return (
-      <Grid container spacing={1} alignItems="center">
+      <Grid container spacing={1}>
         <Grid item xs={12} alignItems="center">
           <Typography variant="h4" component="h4">
             Join a Room
@@ -28,7 +28,7 @@ export default class RoomJoinPage extends Component {
                      value={this.state.roomCode}
                      helperText={this.state.error}
                      variant="outlined" 
-                     onChange={this._handleTExtFieldChange}/>
+                     onChange={this.handleTExtFieldChange}/>
         </Grid>
         <Grid item xs={12} alignItems="center">
           <Button variant="contained" color="primary" onClick={ this.roomButtonPressed }>Enter Room</Button>
