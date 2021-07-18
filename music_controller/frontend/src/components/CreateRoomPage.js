@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { Collapse } from '@material-ui/core';
 
 
 
@@ -26,10 +27,13 @@ export default class CreateRoomPage extends Component {
     this.state = {
       guestCanPause: this.props.guestCanPause,
       votesToSkip: this.props.votesToSkip,
+      errorMsg: "",
+      successMsg: "",
     };
     this.handleVotesChange = this.handleVotesChange.bind(this);
     this.handleGuestCanPauseChange = this.handleGuestCanPauseChange.bind(this);
     this.handleRoomButtonPressed = this.handleRoomButtonPressed.bind(this);
+    this.handleUpdateButtonPressed = this.handleUpdateButtonPressed.bind(this);
   }
 
   handleVotesChange(e) {
@@ -58,6 +62,31 @@ export default class CreateRoomPage extends Component {
       .then((data) => this.props.history.push('/room/' + data.code));
   }
 
+  handleUpdateButtonPressed(){
+    const requestOptions = {
+      method: 'PATCH',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        votes_to_skip: this.state.votesToSkip,
+        guest_can_pause: this.state.guestCanPause,
+        code: this.props.roomCode
+      }),
+    };
+    fetch('/api/update-room', requestOptions)
+      .then((res) => {
+        if(res.ok) {
+          this.setState({
+            successMsg: "Room updated successfully!"
+          });
+        } else {
+          this.setState({
+            errorMsg: "Error updating room..."
+          });
+        }
+        this.props.updateCallback();
+      });
+  }
+
   renderCreateButtons() {
     return (
       <Grid container spacing={1}>
@@ -78,7 +107,7 @@ export default class CreateRoomPage extends Component {
   renderUpdateButtons() {
     return (
       <Grid item xs={12} align="center">
-        <Button color="primary" variant="contained" onClick={this.handleRoomButtonPressed}>
+        <Button color="primary" variant="contained" onClick={this.handleUpdateButtonPressed}>
           Update Room
         </Button>
       </Grid>
@@ -91,6 +120,11 @@ export default class CreateRoomPage extends Component {
     return (
       <Grid container spacing={1}>
         <Grid item xs={12} align="center">
+          <Collapse in={this.state.errorMsg != "" || this.state.successMsg != ""}>
+            {this.state.successMsg}
+          </Collapse>
+        </Grid>
+        <Grid item xs={12} align="center">
           <Typography component='h4' variant='h4'>
             {title}
           </Typography>
@@ -102,7 +136,9 @@ export default class CreateRoomPage extends Component {
                 Guest Control of Playback State
               </div>
             </FormHelperText>
-            <RadioGroup row defaultValue='true' onChange={this.handleGuestCanPauseChange}>
+            <RadioGroup row 
+                        defaultValue={this.props.guestCanPause.toString()}
+                        onChange={this.handleGuestCanPauseChange}>
               <FormControlLabel value='true' control={<Radio color="primary" />} 
                                 label="Play/Pause" labelPlacement="bottom" />
               <FormControlLabel value='false' control={<Radio color="secondary" />} 
