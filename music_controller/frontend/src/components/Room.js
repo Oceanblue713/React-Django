@@ -13,11 +13,12 @@ export default class Room extends Component {
     };
 
     this.roomCode = this.props.match.params.roomCode;
-    this.getRoomDetalis();
     this.leaeveButtonPressed = this.leaeveButtonPressed.bind(this);
     this.updateShowSettings = this.updateShowSettings.bind(this);
     this.renderSettingsButton = this.renderSettingsButton.bind(this);
     this.renderSettings = this.renderSettings.bind(this);
+    this.getRoomDetalis = this.getRoomDetalis.bind(this);
+    this.getRoomDetalis();
   }
 
   getRoomDetalis() {
